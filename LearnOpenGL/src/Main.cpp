@@ -6,41 +6,44 @@ int main(void)
 {
     GLFWwindow* window;
 
-    /* Initialize the library */
-    glfwInit();
+    glfwInit(); // Initialize the library
 
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1600, 900, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1600, 900, "Hello World", NULL, NULL); // Create a windowed mode window and its OpenGL context
     if (!window) {
         std::cout << "Window failed to create!" << std::endl;
         glfwTerminate();
         return -1;
     }
 
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(window);// Make the window's context current
 
-    /* Initialize the GLEW library */
+    // Initialize the GLEW library
     if (glewInit() != GLEW_OK) {
         std::cout << "Error!" << std::endl;
+        return -1;
     }
 
-    /* Loop until the user closes the window */
+    // Create and bind a vertex buffer with the specified positions
+    float positions[6] = {
+         0.0f,  0.5f,
+        -0.5f, -0.5f,
+         0.5f, -0.5f
+    };
+
+    unsigned int buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+
+    // Loop until the user closes the window
     while (!glfwWindowShouldClose(window)) {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT); // Render here
 
-        glBegin(GL_TRIANGLES);
-        glVertex2f(0.0f, 0.5f);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.5f, -0.5f);
-        glEnd();
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(window); // Swap front and back buffers
 
-        /* Poll for and process events */
-        glfwPollEvents();
+        glfwPollEvents(); // Poll for and process events
     }
 
     glfwTerminate();
